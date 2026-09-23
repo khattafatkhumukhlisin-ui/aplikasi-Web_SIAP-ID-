@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGAP.ID - Platform Tanggap Bencana Gen Z</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS untuk Peta -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 380px; width: 100%; border-radius: 1rem; }
+        .neo-box {
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000;
+        }
+        .neo-btn {
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s ease;
+        }
+        .neo-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .call-modal { display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,.65); padding:16px; align-items:center; justify-content:center; }
+        .call-modal.show { display:flex; }
+        .call-card { width:100%; max-width:390px; background:#fff; border:3px solid #000; box-shadow:6px 6px 0 #000; border-radius:18px; padding:20px; }
+
+        .neo-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 font-sans text-gray-900 pb-16">
+
+    <!-- Header Navbar -->
+    <header class="bg-red-500 border-b-4 border-black p-4 sticky top-0 z-[1000]">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🚨</span>
+                <div>
+                    <h1 class="text-2xl font-black italic tracking-wider text-white drop-shadow-[2px_2px_0px_#000]">SIGAP.ID</h1>
+                    <span class="text-[10px] font-bold text-yellow-300 block -mt-1 tracking-widest">RESCUE-Z EDITION</span>
+                </div>
+            </div>
+            <a href="#sos-section" class="neo-btn bg-yellow-400 text-black px-4 py-2 rounded-xl font-black text-xs md:text-sm uppercase flex items-center gap-1.5 hover:bg-yellow-300">
+                ⚡ SOS Darurat
+            </a>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4 mt-6 space-y-10">
+
+        <!-- Banner Hero -->
+        <div class="neo-box bg-cyan-300 p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-3">
+                <span class="bg-black text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Pusat Edukasi & Mitigasi</span>
+                <h2 class="text-3xl md:text-5xl font-black leading-tight">Smart Safety.<br>Quick Action. Stay Aware!</h2>
+                <p class="font-bold text-sm md:text-base text-gray-800 max-w-xl">
+                    Edukasi bencana visual, video interaktif, kuis kesiapsiagaan, serta akses cepat nomor darurat 1-Tap dalam satu platform.
+                </p>
+            </div>
+            <div class="text-7xl flex-shrink-0 animate-bounce">🎒</div>
+        </div>
+
+        <!-- Section 1: Video Edukasi Interaktif -->
+        <section class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🎬</span>
+                <div>
+                    <h2 class="text-2xl font-black uppercase">Video Edukasi Tanggap Bencana</h2>
+                    <p class="text-xs font-bold text-gray-600">Tonton panduan visual singkat mengenai aksi evakuasi dan mitigasi darurat</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Video Card 1 (Lokal MP4) -->
+                <div class="neo-box bg-white rounded-2xl overflow-hidden flex flex-col justify-between">
+                    <div class="p-2 bg-purple-200 border-b-2 border-black">
+                        <!-- Opsi Video Lokal -->
+                        <video controls class="w-full h-40 object-cover rounded-xl border border-black">
+                            <source src="videos/gempa.mp4" type="video/mp4">
+                            Browser kamu tidak mendukung pemutar video.
+                        </video>
+                    </div>
+                    <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-black bg-purple-300 text-black px-2 py-0.5 rounded border border-black uppercase">Gempa Bumi</span>
+                            <h3 class="font-black text-base mt-2">Mitigasi & Evakuasi Gempa Bumi di Sekolah/Rumah</h3>
+                            <p class="text-xs font-bold text-gray-600 mt-1">Panduan praktis prinsip Drop, Cover, Hold On saat terjadi guncangan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 2 (Lokal MP4) -->
+                <div class="neo-box bg-white rounded-2xl overflow-hidden flex flex-col justify-between">
+                    <div class="p-2 bg-blue-200 border-b-2 border-black">
+                        <video controls class="w-full h-40 object-cover rounded-xl border border-black">
+                            <source src="videos/banjir.mp4" type="video/mp4">
+                            Browser kamu tidak mendukung pemutar video.
+                        </video>
+                    </div>
+                    <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-black bg-blue-300 text-black px-2 py-0.5 rounded border border-black uppercase">Banjir</span>
+                            <h3 class="font-black text-base mt-2">Aksi Tanggap Darurat Banjir & Penyelamatan Listrik</h3>
+                            <p class="text-xs font-bold text-gray-600 mt-1">Langkah aman mengamankan instalasi listrik dan barang berharga.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Card 3 (YouTube Embed) -->
+                <div class="neo-box bg-white rounded-2xl overflow-hidden flex flex-col justify-between">
+                    <div class="p-2 bg-orange-200 border-b-2 border-black">
+                        <!-- Opsi YouTube Embed -->
+                        <iframe 
+                            class="w-full h-40 rounded-xl border border-black" 
+                            src="https://www.youtube.com/embed/9a6P1E1-v6c" 
+                            title="Video Kebakaran"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-black bg-orange-300 text-black px-2 py-0.5 rounded border border-black uppercase">Kebakaran</span>
+                            <h3 class="font-black text-base mt-2">Penggunaan APAR & Cara Melarikan Diri Dari Asap</h3>
+                            <p class="text-xs font-bold text-gray-600 mt-1">Teknik merayap di area berasap dan penanganan kobaran api awal.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 2: Pusat Layanan Darurat -->
+        <section id="sos-section" class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">📞</span>
+                <div>
+                    <h2 class="text-2xl font-black uppercase">Pusat Nomor Darurat (Salin & Hubungi)</h2>
+                    <p class="text-xs font-bold text-gray-600">Tekan tombol untuk membuka aplikasi Telepon. Fitur panggilan mengikuti dukungan browser/Android; jika penampil HTML memblokir tel:, gunakan Chrome atau salin nomor.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="neo-box bg-blue-400 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-4xl">👮‍♂️</span>
+                            <span class="text-xs font-black bg-black text-white px-2 py-0.5 rounded">110</span>
+                        </div>
+                        <h3 class="font-black text-lg mt-2">Kepolisian RI</h3>
+                        <p class="text-xs font-bold text-gray-900 mt-1">Laporan kejahatan, kecelakaan, & gangguan keamanan.</p>
+                    </div>
+                    <a href="tel:110" onclick="return directCall('110');" class="neo-btn bg-white text-black font-black py-2 rounded-lg text-center text-sm hover:bg-gray-100 block w-full">📞 Hubungi 110</a>
+                </div>
+
+                <div class="neo-box bg-orange-400 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-4xl">🚁</span>
+                            <span class="text-xs font-black bg-black text-white px-2 py-0.5 rounded">115</span>
+                        </div>
+                        <h3 class="font-black text-lg mt-2">BASARNAS</h3>
+                        <p class="text-xs font-bold text-gray-900 mt-1">Pencarian & pertolongan evakuasi korban bencana.</p>
+                    </div>
+                    <a href="tel:115" onclick="return directCall('115');" class="neo-btn bg-white text-black font-black py-2 rounded-lg text-center text-sm hover:bg-gray-100 block w-full">📞 Hubungi 115</a>
+                </div>
+
+                <div class="neo-box bg-red-400 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-4xl">🚑</span>
+                            <span class="text-xs font-black bg-black text-white px-2 py-0.5 rounded">118 / 119</span>
+                        </div>
+                        <h3 class="font-black text-lg mt-2">Ambulans / Medis</h3>
+                        <p class="text-xs font-bold text-gray-900 mt-1">Penanganan gawat darurat medis & pertolongan pertama.</p>
+                    </div>
+                    <a href="tel:119" onclick="return directCall('119');" class="neo-btn bg-white text-black font-black py-2 rounded-lg text-center text-sm hover:bg-gray-100 block w-full">📞 Hubungi 119</a>
+                </div>
+
+                <div class="neo-box bg-yellow-400 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-4xl">🚒</span>
+                            <span class="text-xs font-black bg-black text-white px-2 py-0.5 rounded">113</span>
+                        </div>
+                        <h3 class="font-black text-lg mt-2">Pemadam Kebakaran</h3>
+                        <p class="text-xs font-bold text-gray-900 mt-1">Penanganan kebakaran & kondisi darurat berbahaya.</p>
+                    </div>
+                    <a href="tel:113" onclick="return directCall('113');" class="neo-btn bg-white text-black font-black py-2 rounded-lg text-center text-sm hover:bg-gray-100 block w-full">📞 Hubungi 113</a>
+                </div>
+            </div>
+
+            <div class="neo-box bg-emerald-300 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="text-4xl">📍</span>
+                    <div>
+                        <h4 class="font-black text-base md:text-lg">Kirim Lokasi GPS Darurat via WhatsApp</h4>
+                        <p class="text-xs font-bold text-gray-800">Otomatis mengunci koordinat GPS perangkat dan membuat pesan bantuan darurat.</p>
+                    </div>
+                </div>
+                <button onclick="shareLocationWhatsApp()" class="neo-btn bg-black text-white font-black px-5 py-3 rounded-xl text-xs md:text-sm whitespace-nowrap hover:bg-gray-800">
+                    📲 Bagikan Lokasi Darurat
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 3: Kuis Kesiapsiagaan -->
+        <section class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🎯</span>
+                <h2 class="text-2xl font-black uppercase">Kuis Tanggap Bencana</h2>
+            </div>
+
+            <div class="neo-box bg-white p-6 rounded-2xl space-y-4">
+                <div id="quiz-container">
+                    <div class="flex justify-between items-center pb-2 border-b-2 border-black">
+                        <span id="quiz-progress" class="text-xs font-black bg-black text-white px-3 py-1 rounded-full">Soal 1 / 10</span>
+                        <span id="quiz-score" class="text-xs font-black text-red-600">Skor: 0</span>
+                    </div>
+
+                    <div class="mt-4 space-y-4">
+                        <h3 id="quiz-question" class="text-base md:text-lg font-black">Pertanyaan akan muncul di sini...</h3>
+                        <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                    </div>
+
+                    <div id="quiz-explanation" class="hidden p-4 rounded-xl bg-yellow-100 border-2 border-black text-xs font-bold text-gray-800 mt-4"></div>
+
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden mt-4 neo-btn bg-black text-white font-black px-6 py-2.5 rounded-xl text-xs uppercase hover:bg-gray-800">
+                        Soal Berikutnya ➡️
+                    </button>
+                </div>
+
+                <div id="quiz-result" class="hidden text-center space-y-4 py-6">
+                    <div class="text-6xl">🏆</div>
+                    <h3 class="text-2xl font-black">Kuis Selesai!</h3>
+                    <p id="result-score-text" class="text-lg font-bold text-gray-800">Skor Kamu: 0 / 100</p>
+                    <div id="badge-container" class="inline-block neo-box bg-yellow-300 px-4 py-2 rounded-xl font-black text-sm">
+                        Gelar: Pahlawan Siaga Bencana
+                    </div>
+                    <div>
+                        <button onclick="resetQuiz()" class="neo-btn bg-red-500 text-white font-black px-6 py-2.5 rounded-xl text-xs uppercase hover:bg-red-600">
+                            Ulangi Kuis 🔄
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Peta Terkini & Lapor Warga -->
+        <section class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl">🗺️</span>
+                <h2 class="text-2xl font-black uppercase">Peta Pantauan & Lapor Warga</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 neo-box bg-white p-3 rounded-2xl">
+                    <div id="map"></div>
+                </div>
+
+                <div class="neo-box bg-rose-200 p-5 rounded-2xl space-y-3">
+                    <h3 class="font-black text-lg">📢 Lapor Kejadian Sekitar</h3>
+                    <p class="text-xs font-bold text-gray-700">Laporkan genangan air atau jalan rusak secara real-time ke peta komunitas.</p>
+                    
+                    <form onsubmit="addReportMarker(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-black mb-1">Jenis Bencana</label>
+                            <select id="report-type" class="w-full neo-box p-2 text-xs font-bold rounded-lg bg-white outline-none">
+                                <option value="Banjir">🌊 Banjir / Genangan</option>
+                                <option value="Pohon Tumbang">🌳 Pohon Tumbang</option>
+                                <option value="Jalan Rusak">⚠️ Jalan Rusak / Longsor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black mb-1">Keterangan Singkat</label>
+                            <textarea id="report-desc" rows="2" required placeholder="Contoh: Genangan air 30cm di depan minimarket." class="w-full neo-box p-2 text-xs font-bold rounded-lg outline-none bg-white"></textarea>
+                        </div>
+                        <button type="submit" class="w-full neo-btn bg-red-500 text-white font-black py-2.5 rounded-xl text-xs uppercase hover:bg-red-600">
+                            Kirim Laporan Peta 📍
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+
+    <div id="call-modal" class="call-modal" role="dialog" aria-modal="true" aria-labelledby="call-title">
+        <div class="call-card">
+            <div class="text-4xl">📞</div>
+            <h3 id="call-title" class="font-black text-xl mt-2">Hubungi layanan darurat</h3>
+            <p id="call-service" class="font-black text-gray-700 mt-1"></p>
+            <p class="text-3xl font-black mt-2" id="call-number"></p>
+            <p class="text-xs font-bold text-gray-600 mt-3">Jika file dibuka dari penampil/WebView yang memblokir panggilan, gunakan tombol Telepon. Jika tetap tidak membuka, pilih menu browser <b>Buka di Chrome</b>.</p>
+            <div class="grid gap-3 mt-4">
+                <a id="call-link" href="#" class="neo-btn bg-green-400 text-black font-black py-3 rounded-xl text-center">📞 Buka Aplikasi Telepon</a>
+                <button id="copy-call-number" type="button" class="neo-btn bg-yellow-300 text-black font-black py-3 rounded-xl">📋 Salin Nomor</button>
+                <button type="button" onclick="closeCallModal()" class="neo-btn bg-gray-200 text-black font-black py-3 rounded-xl">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS untuk Peta -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. LEAFLET MAP & GEOLOCATION
+        const map = L.map('map').setView([-6.2088, 106.8456], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        let userLat = -6.2088;
+        let userLng = 106.8456;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                userLat = position.coords.latitude;
+                userLng = position.coords.longitude;
+                map.setView([userLat, userLng], 13);
+                L.marker([userLat, userLng]).addTo(map)
+                    .bindPopup("<b>Lokasi Anda Saat Ini</b>").openPopup();
+            });
+        }
+
+        function addReportMarker(event) {
+            event.preventDefault();
+            const type = document.getElementById('report-type').value;
+            const desc = document.getElementById('report-desc').value;
+
+            L.marker([userLat, userLng]).addTo(map)
+                .bindPopup(`<b>${type}</b><br>${desc}`)
+                .openPopup();
+
+            alert("Laporan berhasil ditambahkan ke peta!");
+            document.getElementById('report-desc').value = '';
+        }
+
+        function shareLocationWhatsApp() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const text = `SOS! Saya membutuhkan bantuan darurat bencana. Lokasi GPS saya: https://maps.google.com/?q=${lat},${lng}`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                }, () => {
+                    alert("Gagal mengakses GPS. Pastikan izinkan akses lokasi di browser Anda.");
+                });
+            } else {
+                alert("Geolocation tidak didukung pada browser ini.");
+            }
+        }
+
+        // Panggilan darurat: hanya gunakan skema telepon resmi.
+        // Browser/Android yang mendukung tel: akan menyerahkan panggilan ke aplikasi Telepon.
+        function directCall(number) {
+            const cleanNumber = String(number).replace(/\D/g, '');
+            if (!cleanNumber) return false;
+
+            // Tetap berada pada aksi klik pengguna agar browser mengizinkan external scheme.
+            try {
+                window.open('tel:' + cleanNumber, '_blank');
+            } catch (e) {}
+            return true;
+        }
+
+        // Modal/copy tetap tersedia sebagai fallback untuk WebView yang tidak mengizinkan tel:.
+        let activeCallNumber = '';
+        function openCallModal(number, serviceName) {
+            activeCallNumber = String(number).replace(/\D/g, '');
+            document.getElementById('call-service').textContent = serviceName;
+            document.getElementById('call-number').textContent = activeCallNumber;
+            document.getElementById('call-link').href = 'tel:' + activeCallNumber;
+            document.getElementById('call-modal').classList.add('show');
+        }
+        function closeCallModal() {
+            document.getElementById('call-modal').classList.remove('show');
+        }
+        const copyBtn = document.getElementById('copy-call-number');
+        if (copyBtn) copyBtn.addEventListener('click', async function () {
+            try {
+                await navigator.clipboard.writeText(activeCallNumber);
+                alert('Nomor ' + activeCallNumber + ' berhasil disalin. Buka aplikasi Telepon dan tempel nomornya.');
+            } catch (e) {
+                alert('Nomor layanan: ' + activeCallNumber);
+            }
+        });
+        const callModal = document.getElementById('call-modal');
+        if (callModal) callModal.addEventListener('click', function(e) {
+            if (e.target === this) closeCallModal();
+        });
+
+        // 2. KUIS INTERAKTIF
+        const quizData = [
+            {
+                q: "Apa tindakan pertama yang harus dilakukan saat gempa bumi terjadi di dalam ruangan?",
+                options: ["Lari keluar lewat lift", "Sembunyi di bawah meja yang kuat (Drop, Cover, Hold On)", "Berdiri di dekat jendela kaca", "Langsung mengambil foto untuk sosmed"],
+                answer: 1,
+                exp: "Metode Drop, Cover, Hold On adalah standar keselamatan utama untuk melindungi kepala dan tubuh dari reruntuhan."
+            },
+            {
+                q: "Apa nama tas khusus yang disiapkan untuk bertahan hidup minimal 3 hari saat darurat bencana?",
+                options: ["Tas Belanja Daur Ulang", "Tas Siaga Bencana (TSB)", "Tas Punggung Sekolah", "Tas Koper Travel"],
+                answer: 1,
+                exp: "Tas Siaga Bencana (TSB) berisi kebutuhan mendasar seperti dokumen, P3K, makanan kaleng, dan senter."
+            },
+            {
+                q: "Jika berada di pantai dan merasakan gempa kuat disertai air laut surut mendadak, apa yang harus dilakukan?",
+                options: ["Menunggu pengumuman resmi di pantai", "Mencari ikan yang terdampar", "Segera lari ke tempat yang tinggi (Potensi Tsunami)", "Berenang menuju tengah laut"],
+                answer: 2,
+                exp: "Air laut surut tiba-tiba setelah gempa adalah tanda alami peringatan tsunami. Segera evakuasi ke tempat tinggi!"
+            },
+            {
+                q: "Nomor darurat terpadu nasional bebas pulsa yang bisa dihubungi untuk segala situasi darurat adalah...",
+                options: ["112", "123", "108", "911"],
+                answer: 0,
+                exp: "Nomor 112 adalah Layanan Darurat Terpadu di Indonesia yang dapat dihubungi meskipun HP tanpa SIM Card."
+            },
+            {
+                q: "Saat evakuasi dari bangunan yang terbakar dan penuh asap tebal, sebaiknya kita...",
+                options: ["Berlari cepat sambil menengadah", "Merayap/merunduk dekat lantai sambil menutup hidung dengan kain basah", "Sembunyi di dalam kamar mandi", "Menggunakan kipas angin"],
+                answer: 1,
+                exp: "Udara bersih berada di dekat lantai karena asap beracun yang panas akan membumbung ke atas."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const q = quizData[currentQ];
+            document.getElementById('quiz-progress').innerText = `Soal ${currentQ + 1} / ${quizData.length}`;
+            document.getElementById('quiz-score').innerText = `Skor: ${score}`;
+            document.getElementById('quiz-question').innerText = q.q;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "neo-btn p-3 bg-gray-50 text-left font-bold text-xs rounded-xl hover:bg-gray-100 transition";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-explanation').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+
+        function checkAnswer(selectedIdx, btnElement) {
+            const q = quizData[currentQ];
+            const buttons = document.getElementById('quiz-options').children;
+
+            for (let b of buttons) {
+                b.disabled = true;
+                b.classList.add('opacity-60');
+            }
+
+            if (selectedIdx === q.answer) {
+                btnElement.classList.remove('bg-gray-50', 'opacity-60');
+                btnElement.classList.add('bg-green-300');
+                score += 20;
+            } else {
+                btnElement.classList.remove('bg-gray-50', 'opacity-60');
+                btnElement.classList.add('bg-red-300');
+                buttons[q.answer].classList.remove('opacity-60');
+                buttons[q.answer].classList.add('bg-green-300');
+            }
+
+            document.getElementById('quiz-score').innerText = `Skor: ${score}`;
+            const expBox = document.getElementById('quiz-explanation');
+            expBox.innerHTML = `<b>Penjelasan:</b> ${q.exp}`;
+            expBox.classList.remove('hidden');
+
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            const resultBox = document.getElementById('quiz-result');
+            resultBox.classList.remove('hidden');
+
+            document.getElementById('result-score-text').innerText = `Skor Akhir Kamu: ${score} / 100`;
+            const badge = document.getElementById('badge-container');
+
+            if (score >= 80) {
+                badge.innerText = "Gelar: 🥇 Pahlawan Tanggap Bencana";
+            } else if (score >= 50) {
+                badge.innerText = "Gelar: 🥈 Manggala Siaga";
+            } else {
+                badge.innerText = "Gelar: 🥉 Pemula Tanggap Bencana";
+            }
+        }
+
+        function resetQuiz() {
+            currentQ = 0;
+            score = 0;
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
